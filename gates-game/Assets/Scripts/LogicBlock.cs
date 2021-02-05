@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum ConnectionType
 {
+    // Corresponds to index in texture array
     None = 0,
     Input,
     Output
@@ -16,6 +17,16 @@ public class LogicBlock : MonoBehaviour
     public List<Plug> inputs = new List<Plug>();
     public List<Plug> outputs = new List<Plug>();
     public List<Plug> unconnected = new List<Plug>();
+
+    private void Start()
+    {
+        UpdateMaterial();
+    }
+
+    private void OnValidate()
+    {
+        UpdateMaterial();
+    }
 
     public Plug ProcessHit(ref RaycastHit hit, Gun source)
     {
@@ -55,20 +66,29 @@ public class LogicBlock : MonoBehaviour
 
         if (xAbs > yAbs && xAbs > zAbs)
         {
-            return normal.x > 0.0f ? 3 : 2;
+            return normal.x > 0.0f ? 1 : 0;
         }
 
         if (yAbs > xAbs && yAbs > zAbs)
         {
-            return normal.y > 0.0f ? 5 : 4;
+            return normal.y > 0.0f ? 3 : 2;
         }
 
         if (zAbs > xAbs && zAbs > yAbs)
         {
-            return normal.z > 0.0f ? 1 : 0;
+            return normal.z > 0.0f ? 5 : 4;
         }
 
         Utils.Unreachable();
         return -1;
+    }
+
+    private void UpdateMaterial()
+    {
+        var renderer = GetComponent<MeshRenderer>();
+        var material = renderer.material;
+
+        material.SetVector("_BlockSideIndices1", new Vector4((int)sockets[0], (int)sockets[1], (int)sockets[2], (int)sockets[3]));
+        material.SetVector("_BlockSideIndices2", new Vector4((int)sockets[4], (int)sockets[5], 0, 0));
     }
 }
