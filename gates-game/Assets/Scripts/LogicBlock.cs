@@ -1,40 +1,72 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ConnectionType
+[ExecuteInEditMode]
+public abstract class LogicBlock : MonoBehaviour
 {
-    // Corresponds to index in texture array
-    None = 0,
-    Input,
-    Output
-}
+    public bool powered;
 
-public class LogicBlock : MonoBehaviour
-{
+    [System.NonSerialized]
+    public int poolIndex = -1;
+
+    [System.NonSerialized]
+    public bool destroyed;
+
     public ConnectionType[] sockets = new ConnectionType[6];
 
+    [System.NonSerialized]
     public List<Plug> inputs = new List<Plug>();
+
+    public int maxInputs = Int32.MaxValue;
+    public int maxOutputs = Int32.MaxValue;
+
+    [System.NonSerialized]
     public List<Plug> outputs = new List<Plug>();
+
+    [System.NonSerialized]
     public List<Plug> unconnected = new List<Plug>();
 
     private MaterialPropertyBlock uniformBlock;
     new private Renderer renderer;
 
-    private void OnEnable()
+    public abstract void Init();
+    public abstract void Tick();
+
+    private void Awake()
     {
-        uniformBlock = new MaterialPropertyBlock();
-        renderer = GetComponent<MeshRenderer>();
+        BlockManager.RegisterBlock(this);
+        Init();
     }
 
-    private void Start()
+    private void OnDestroy()
     {
-        UpdateMaterial();
+        BlockManager.UnregisterBlock(this);
+
+        foreach (var plug in GetAllPlugs())
+        {
+            plug.DestroyPlug(true);
+            plug.block = null;
+        }
     }
 
-    private void OnValidate()
+    public IEnumerable<Plug> GetAllPlugs()
     {
-        UpdateMaterial();
+        foreach (var plug in inputs)
+        {
+            yield return plug;
+        }
+
+        foreach (var plug in outputs)
+        {
+            yield return plug;
+        }
+
+        foreach (var plug in unconnected)
+        {
+            yield return plug;
+        }
     }
 
     public void RemovePlug(Plug plug)
@@ -58,15 +90,6 @@ public class LogicBlock : MonoBehaviour
             Debug.Assert(index >= 0 && index < sockets.Length);
 
             plug = PlugManager.CreatePlug(this, sockets[index], localPos, localNormal);
-
-            switch (plug.type)
-            {
-                case ConnectionType.Input: { inputs.Add(plug); } break;
-                case ConnectionType.Output: { outputs.Add(plug); } break;
-                default: { unconnected.Add(plug); } break;
-            }
-
-            Debug.Log($"Hit with index {index} of type {sockets[index].ToString()}");
         }
 
         return plug;
@@ -99,6 +122,7 @@ public class LogicBlock : MonoBehaviour
 
     private void UpdateMaterial()
     {
+        #if false
         if (uniformBlock == null) uniformBlock = new MaterialPropertyBlock();
         if (renderer == null) renderer = GetComponent<MeshRenderer>();
 
@@ -106,5 +130,22 @@ public class LogicBlock : MonoBehaviour
         uniformBlock.SetVector("_BlockSideIndices1", new Vector4((int)sockets[0], (int)sockets[1], (int)sockets[2], (int)sockets[3]));
         uniformBlock.SetVector("_BlockSideIndices2", new Vector4((int)sockets[4], (int)sockets[5], 0, 0));
         renderer.SetPropertyBlock(uniformBlock);
+        #endif
+    }
+
+    private void OnEnable()
+    {
+        uniformBlock = new MaterialPropertyBlock();
+        renderer = GetComponent<MeshRenderer>();
+    }
+
+    private void Start()
+    {
+        UpdateMaterial();
+    }
+
+    private void OnValidate()
+    {
+        UpdateMaterial();
     }
 }

@@ -6,10 +6,21 @@ public abstract class PersistantSceneObject<T> : MonoBehaviour where T : class
 {
     private static T instance;
 
+    public static T GetInstanceOrNull()
+    {
+        return instance;
+    }
+
     public static T GetInstance()
     {
         Debug.Assert(instance != null);
         return instance;
+    }
+
+
+    public static bool Destroyed()
+    {
+        return instance == null;
     }
 
     protected virtual void Awake()
@@ -21,7 +32,9 @@ public abstract class PersistantSceneObject<T> : MonoBehaviour where T : class
 
     protected virtual void OnDestroy()
     {
-        Debug.Assert(instance == this);
-        instance = null;
+        if (instance != null)
+        {
+            instance = null;
+        }
     }
 }

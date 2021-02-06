@@ -23,13 +23,13 @@ public class Gun : MonoBehaviour
                         if (pendingPlug != null)
                         {
                             Wire wire = WireManager.TryCreateWire(newPlug, pendingPlug);
-                            pendingPlug.DisableDespawn(false);
+                            pendingPlug.disableDespawn = false;
                             pendingPlug = null;
                         }
                         else
                         {
                             pendingPlug = newPlug;
-                            pendingPlug.DisableDespawn(true);
+                            pendingPlug.disableDespawn = true;
                         }
                     }
                     return;
@@ -38,7 +38,7 @@ public class Gun : MonoBehaviour
                 var plug = hit.collider.gameObject.GetComponent<Plug>();
                 if (plug != null)
                 {
-                    PlugManager.DestroyPlug(plug);
+                    plug.DestroyPlug();
                 }
             }
         }
