@@ -591,7 +591,10 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols: {}
-  additionalCompilerArguments: {}
+  additionalCompilerArguments:
+    1:
+    - -nowarn:CS0252
+    - -warnaserror
   platformArchitecture: {}
   scriptingBackend:
     Standalone: 1

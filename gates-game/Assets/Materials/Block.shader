@@ -5,8 +5,8 @@ Shader "Block"
         // Specular vs Metallic workflow
         [HideInInspector] _WorkflowMode("WorkflowMode", Float) = 1.0
 
-        _BlockSideIndices1("BlockSideIndices1", Vector) = (0,0,0,0)
-        _BlockSideIndices2("BlockSideIndices2", Vector) = (0,0,0,0)
+        [PerRendererData] _BlockSideIndices1("BlockSideIndices1", Vector) = (0,0,0,0)
+        [PerRendererData] _BlockSideIndices2("BlockSideIndices2", Vector) = (0,0,0,0)
 
         [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)

@@ -18,6 +18,15 @@ public class LogicBlock : MonoBehaviour
     public List<Plug> outputs = new List<Plug>();
     public List<Plug> unconnected = new List<Plug>();
 
+    private MaterialPropertyBlock uniformBlock;
+    new private Renderer renderer;
+
+    private void OnEnable()
+    {
+        uniformBlock = new MaterialPropertyBlock();
+        renderer = GetComponent<MeshRenderer>();
+    }
+
     private void Start()
     {
         UpdateMaterial();
@@ -28,6 +37,14 @@ public class LogicBlock : MonoBehaviour
         UpdateMaterial();
     }
 
+    public void RemovePlug(Plug plug)
+    {
+        if (inputs.Remove(plug)) return;
+        if (outputs.Remove(plug)) return;
+        if (unconnected.Remove(plug)) return;
+        Utils.Unreachable();
+    }
+
     public Plug ProcessHit(ref RaycastHit hit, Gun source)
     {
         Plug plug = null;
@@ -35,15 +52,12 @@ public class LogicBlock : MonoBehaviour
         if (hit.collider.gameObject == gameObject)
         {
             Vector3 localNormal = hit.transform.InverseTransformVector(hit.normal);
-            Vector3 localPos = hit.transform.InverseTransformPoint(hit.point);
+            Vector3 localPos = hit.transform.InverseTransformPoint(hit.point) + localNormal * 0.1f;
 
             int index = GetHitSocketIndex(localNormal);
             Debug.Assert(index >= 0 && index < sockets.Length);
 
-            plug = PlugManager.SpawnPlug(this, localPos, localNormal);
-
-            plug.block = this;
-            plug.type = sockets[index];
+            plug = PlugManager.CreatePlug(this, sockets[index], localPos, localNormal);
 
             switch (plug.type)
             {
@@ -85,10 +99,12 @@ public class LogicBlock : MonoBehaviour
 
     private void UpdateMaterial()
     {
-        var renderer = GetComponent<MeshRenderer>();
-        var material = renderer.material;
+        if (uniformBlock == null) uniformBlock = new MaterialPropertyBlock();
+        if (renderer == null) renderer = GetComponent<MeshRenderer>();
 
-        material.SetVector("_BlockSideIndices1", new Vector4((int)sockets[0], (int)sockets[1], (int)sockets[2], (int)sockets[3]));
-        material.SetVector("_BlockSideIndices2", new Vector4((int)sockets[4], (int)sockets[5], 0, 0));
+        renderer.GetPropertyBlock(uniformBlock);
+        uniformBlock.SetVector("_BlockSideIndices1", new Vector4((int)sockets[0], (int)sockets[1], (int)sockets[2], (int)sockets[3]));
+        uniformBlock.SetVector("_BlockSideIndices2", new Vector4((int)sockets[4], (int)sockets[5], 0, 0));
+        renderer.SetPropertyBlock(uniformBlock);
     }
 }
