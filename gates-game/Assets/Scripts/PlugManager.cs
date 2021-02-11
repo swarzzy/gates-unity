@@ -19,7 +19,7 @@ public class PlugManager : PersistantSceneObject<PlugManager>
 
     private int plugSerialCount;
 
-    public static Plug CreatePlug(LogicBlock block, ConnectionType connectionType, Vector3 p, Vector3 ori)
+    public static Plug CreatePlug(Block block, ConnectionType connectionType, Vector3 p, Vector3 ori)
     {
         Plug plug = null;
 

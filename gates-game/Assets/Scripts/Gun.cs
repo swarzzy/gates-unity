@@ -14,7 +14,7 @@ public class Gun : MonoBehaviour
         {
             if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, Mathf.Infinity))
             {
-                var block = hit.collider.gameObject.GetComponent<LogicBlock>();
+                var block = hit.collider.gameObject.GetComponent<Block>();
                 if (block != null)
                 {
                     Plug newPlug = block.ProcessHit(ref hit, this);

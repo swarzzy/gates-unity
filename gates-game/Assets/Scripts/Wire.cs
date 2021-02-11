@@ -14,6 +14,8 @@ public class Wire : MonoBehaviour
     new public LineRenderer renderer;
     public Plug begin;
     public Plug end;
+    public Block beginBlock;
+    public Block endBlock;
     public bool blocked;
 
     public void DestroyWire()

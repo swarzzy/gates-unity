@@ -133,8 +133,8 @@ Shader "Block"
             #pragma vertex LitCustomPassVertex
             #pragma fragment LitCustomPassFragment
 
-            #include "Assets/Materials/LitCustomInput.hlsl"
-            #include "Assets/Materials/LitCustomPass.hlsl"
+            #include "Assets/Shaders/LitCustomInput.hlsl"
+            #include "Assets/Shaders/LitCustomPass.hlsl"
             ENDHLSL
         }
 

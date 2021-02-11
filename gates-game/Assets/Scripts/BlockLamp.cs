@@ -2,37 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockLamp : LogicBlock
+public class BlockLamp : Block
 {
-    public override void Init()
-    {
-    }
+    private Color color;
 
-    public override void Tick()
+    protected override void OnTick()
     {
-        UpdateMaterial(powered ? Color.red : Color.gray);
-
         bool power = false;
-
         foreach (var plug in inputs)
         {
             power = power || plug.powered;
             if (power) break;
         }
 
-        powered = power;
+        color = power ? Color.red : Color.gray;
+
+        SetPower(power);
     }
 
-    private MaterialPropertyBlock propertyBlock;
-    private Renderer blockRenderer;
-
-    private void UpdateMaterial(Color color)
+    protected override void UpdateMaterial()
     {
-        if (propertyBlock == null) propertyBlock = new MaterialPropertyBlock();
-        if (blockRenderer == null) blockRenderer = GetComponent<MeshRenderer>();
+        var property = GetPropertyBlock();
+        var renderer = GetBlockRenderer();
 
-        blockRenderer.GetPropertyBlock(propertyBlock);
-        propertyBlock.SetColor("_BaseColor", color);
-        blockRenderer.SetPropertyBlock(propertyBlock);
+        renderer.GetPropertyBlock(property);
+        property.SetColor("_BaseColor", color);
+        renderer.SetPropertyBlock(property);
     }
 }

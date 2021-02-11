@@ -31,6 +31,8 @@ public class WireManager : PersistantSceneObject<WireManager>
                 plug.timeUnwired = 0.0f;
 
                 wire.begin = plug;
+                wire.beginBlock = plug.block;
+
                 result = true;
             }
             else if (plug.type == ConnectionType.Input && wire.end == null)
@@ -39,6 +41,8 @@ public class WireManager : PersistantSceneObject<WireManager>
                 plug.timeUnwired = 0.0f;
 
                 wire.end = plug;
+                wire.endBlock = plug.block;
+
                 result = true;
             }
         }
@@ -52,11 +56,13 @@ public class WireManager : PersistantSceneObject<WireManager>
             if (wire.begin == plug)
             {
                 wire.begin = null;
+                wire.beginBlock = null;
                 plug.wire = null;
             }
             else if (wire.end == plug)
             {
                 wire.end = null;
+                wire.endBlock = null;
                 plug.wire = null;
             }
 

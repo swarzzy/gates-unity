@@ -6,7 +6,7 @@ public class Plug : MonoBehaviour
 {
     public bool disableDespawn;
 
-    public LogicBlock block;
+    public Block block;
     public ConnectionType type;
     public Wire wire;
     public float timeUnwired;

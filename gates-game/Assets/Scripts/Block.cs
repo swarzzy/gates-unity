@@ -4,52 +4,51 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public abstract class LogicBlock : MonoBehaviour
+public class Block : MonoBehaviour
 {
-    public bool powered;
+    [SerializeField]
+    private bool powered;
 
-    [System.NonSerialized]
-    public int poolIndex = -1;
-
-    [System.NonSerialized]
-    public bool destroyed;
+    protected bool powerWasChanged { get; private set; }
 
     public ConnectionType[] sockets = new ConnectionType[6];
-
-    [System.NonSerialized]
-    public List<Plug> inputs = new List<Plug>();
 
     public int maxInputs = Int32.MaxValue;
     public int maxOutputs = Int32.MaxValue;
 
-    [System.NonSerialized]
-    public List<Plug> outputs = new List<Plug>();
+    public List<Plug> inputs { get; private set; } = new List<Plug>();
+    public List<Plug> outputs { get; private set; } = new List<Plug>();
+    public List<Plug> unconnected { get; private set; } = new List<Plug>();
 
-    [System.NonSerialized]
-    public List<Plug> unconnected = new List<Plug>();
+    private MaterialPropertyBlock propertyBlock;
+    private Renderer blockRenderer;
 
-    private MaterialPropertyBlock uniformBlock;
-    new private Renderer renderer;
+    protected virtual void OnTick() {}
 
-    public abstract void Init();
-    public abstract void Tick();
-
-    private void Awake()
+    protected MaterialPropertyBlock GetPropertyBlock()
     {
-        BlockManager.RegisterBlock(this);
-        Init();
+        if (propertyBlock == null) propertyBlock = new MaterialPropertyBlock();
+        return propertyBlock;
     }
 
-    private void OnDestroy()
+    protected Renderer GetBlockRenderer()
     {
-        BlockManager.UnregisterBlock(this);
+        if (blockRenderer == null) blockRenderer = GetComponent<MeshRenderer>();
+        Debug.Assert(blockRenderer != null);
+        return blockRenderer;
+    }
 
-        foreach (var plug in GetAllPlugs())
+    public void SetPower(bool power)
+    {
+        if (powered != power)
         {
-            plug.DestroyPlug(true);
-            plug.block = null;
+            powered = power;
+            UpdateMaterial();
+            powerWasChanged = true;
         }
     }
+
+    public bool GetPower() { return powered; }
 
     public IEnumerable<Plug> GetAllPlugs()
     {
@@ -120,32 +119,50 @@ public abstract class LogicBlock : MonoBehaviour
         return -1;
     }
 
-    private void UpdateMaterial()
+    protected virtual void UpdateMaterial()
     {
-        #if false
-        if (uniformBlock == null) uniformBlock = new MaterialPropertyBlock();
-        if (renderer == null) renderer = GetComponent<MeshRenderer>();
+        var property = GetPropertyBlock();
+        var renderer = GetBlockRenderer();
 
-        renderer.GetPropertyBlock(uniformBlock);
-        uniformBlock.SetVector("_BlockSideIndices1", new Vector4((int)sockets[0], (int)sockets[1], (int)sockets[2], (int)sockets[3]));
-        uniformBlock.SetVector("_BlockSideIndices2", new Vector4((int)sockets[4], (int)sockets[5], 0, 0));
-        renderer.SetPropertyBlock(uniformBlock);
-        #endif
+        renderer.GetPropertyBlock(property);
+        property.SetVector("_BlockSideIndices1", new Vector4((int)sockets[0], (int)sockets[1], (int)sockets[2], (int)sockets[3]));
+        property.SetVector("_BlockSideIndices2", new Vector4((int)sockets[4], (int)sockets[5], 0, 0));
+        renderer.SetPropertyBlock(property);
+    }
+
+    private void Update()
+    {
+        OnTick();
+        powerWasChanged = false;
     }
 
     private void OnEnable()
     {
-        uniformBlock = new MaterialPropertyBlock();
-        renderer = GetComponent<MeshRenderer>();
+        StartCoroutine(UpdateMaterialCoroutine());
     }
 
-    private void Start()
+    private IEnumerator UpdateMaterialCoroutine()
     {
+        yield return new WaitForEndOfFrame();
         UpdateMaterial();
     }
 
     private void OnValidate()
     {
         UpdateMaterial();
+    }
+
+    private void Awake()
+    {
+        propertyBlock = new MaterialPropertyBlock();
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var plug in GetAllPlugs())
+        {
+            plug.DestroyPlug(true);
+            plug.block = null;
+        }
     }
 }

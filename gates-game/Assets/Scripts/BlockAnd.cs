@@ -2,20 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockXor : Block
+public class BlockAnd : Block
 {
     protected override void OnTick()
     {
-        bool or = false;
-        bool and = true;
+        bool and = (inputs.Count != 0);
 
         foreach (var plug in inputs)
         {
-            or = or || plug.powered;
             and = and && plug.powered;
         }
 
-        SetPower(or && !and);
+        SetPower(and);
 
         foreach (var plug in outputs)
         {
