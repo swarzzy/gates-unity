@@ -42,9 +42,12 @@ public class ToolWire : Tool
         wireRenderer.SetPosition(1, context.mousePosWorld);
     }
 
-    public void SetInitialPin(Pin pin)
+    public bool SetInitialPin(Pin pin)
     {
+        if (pin.GetPinType() == PinType.Input && pin.GetWires().Count != 0) return false;
+
         initialPin = pin;
+        return true;
     }
 
 }

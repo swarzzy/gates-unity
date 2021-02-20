@@ -21,11 +21,16 @@ public class Desk : PersistantSceneObject<Desk>
     [SerializeField]
     private GameObject wireToolRenderer;
 
+    [SerializeField]
+    private ControlManager controlManager;
+
     public static ToolManager ToolManager { get {return GetInstance().toolManager; } }
 
     public static GameObject WirePrefab { get { return GetInstance().wirePrefab; } }
 
     public static GameObject WireToolRenderer { get { return GetInstance().wireToolRenderer; } }
+
+    public static ControlManager ControlManager { get { return GetInstance().controlManager; } }
 
     protected override void Awake()
     {

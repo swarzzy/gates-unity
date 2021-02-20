@@ -34,6 +34,11 @@ public class ControlManager : MonoBehaviour
 
     private Vector3 lastZoomMousePos;
 
+    public bool IsDragging()
+    {
+        return isDragging;
+    }
+
     private void Start()
     {
         Vector3 mousePosRaw = Input.mousePosition;
@@ -76,11 +81,6 @@ public class ControlManager : MonoBehaviour
                 camera.transform.position -= new Vector3(mouseWorldDelta.x, mouseWorldDelta.y, 0.0f);
             }
         }
-        else
-        {
-            isDragging = false;
-            dragOffset = Vector2.zero;
-        }
 
         // Zoom
 
@@ -102,5 +102,14 @@ public class ControlManager : MonoBehaviour
         camera.transform.position += zoomOffset;
 
         lastMouseScreenPos = currentMouseScreenPos;
+    }
+
+    private void LateUpdate()
+    {
+        if (!Input.GetKey(dragKey))
+        {
+            isDragging = false;
+            dragOffset = Vector2.zero;
+        }
     }
 }

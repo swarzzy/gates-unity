@@ -25,8 +25,11 @@ public class ToolNone : Tool
                     var wireTool = context.manager.GetTool(2) as ToolWire;
                     Debug.Assert(wireTool != null);
 
-                    wireTool.SetInitialPin(pin);
-                    context.manager.EnableTool(2);
+                    bool canStartWire = wireTool.SetInitialPin(pin);
+                    if (canStartWire)
+                    {
+                        context.manager.EnableTool(2);
+                    }
                 }
 
                 processed = true;

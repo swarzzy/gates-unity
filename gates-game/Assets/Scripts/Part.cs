@@ -35,7 +35,7 @@ public class Part : MonoBehaviour
         {
             case PartType.Source: {
                 value = !value;
-                bodyRenderer.color = value ? Color.red : Color.gray;
+                SetColor(value);
             } break;
             case PartType.Led: {} break;
             case PartType.Not: { } break;
@@ -64,6 +64,22 @@ public class Part : MonoBehaviour
                 default: { Utils.Unreachable(); } break;
             }
         }
+
+        switch (type)
+        {
+            case PartType.Source: { SetColor(value); } break;
+            case PartType.Led: { SetColor(value); } break;
+            case PartType.Not: { } break;
+            case PartType.And: { } break;
+            case PartType.Or: { } break;
+            case PartType.Xor: { } break;
+            default: { Utils.Unreachable(); } break;
+        }
+    }
+
+    private void SetColor(bool state)
+    {
+        bodyRenderer.color = state ? Color.red : Color.gray;
     }
 
     private void Update()
@@ -78,7 +94,7 @@ public class Part : MonoBehaviour
                 if (power != value)
                 {
                     value = power;
-                    bodyRenderer.color = value ? Color.red : Color.gray;
+                    SetColor(value);
                 }
             } break;
 

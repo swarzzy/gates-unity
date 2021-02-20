@@ -76,11 +76,14 @@ public class ToolManager : MonoBehaviour
         toolContext.mousePosScreen = mousePosClamped / new Vector2(Screen.width, Screen.height);
         toolContext.mousePosWorld = toolContext.camera.ScreenToWorldPoint(new Vector3(mousePosClamped.x, mousePosClamped.y, toolContext.camera.nearClipPlane));
 
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyUp(KeyCode.Mouse1))
         {
-            if (currentTool.OnDismiss(toolContext))
+            if (!Desk.ControlManager.IsDragging())
             {
-                EnableTool(defaultToolIndex);
+                if (currentTool.OnDismiss(toolContext))
+                {
+                    EnableTool(defaultToolIndex);
+                }
             }
         }
 

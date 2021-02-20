@@ -549,6 +549,7 @@ GameObject:
   - component: {fileID: 764374395}
   - component: {fileID: 764374396}
   - component: {fileID: 764374394}
+  - component: {fileID: 764374397}
   m_Layer: 0
   m_Name: '[Desk]'
   m_TagString: Untagged
@@ -604,6 +605,25 @@ MonoBehaviour:
   toolManager: {fileID: 764374394}
   wirePrefab: {fileID: 1352658548034736198, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
   wireToolRenderer: {fileID: 954763244}
+  controlManager: {fileID: 764374397}
+--- !u!114 &764374397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764374393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25d6f6cf110baa4cb804d15420ad7c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camera: {fileID: 1207124399}
+  dragKey: 324
+  dragThresholdPx: 5
+  zoomSensitivity: 0.1
+  minZoom: 2
+  maxZoom: 10
 --- !u!1 &845254495
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,7 +1195,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1207124400}
-  - component: {fileID: 1207124402}
   - component: {fileID: 1207124399}
   - component: {fileID: 1207124398}
   - component: {fileID: 1207124401}
@@ -1283,24 +1302,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!114 &1207124402
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1207124397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b25d6f6cf110baa4cb804d15420ad7c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  camera: {fileID: 1207124399}
-  dragKey: 324
-  dragThresholdPx: 5
-  zoomSensitivity: 0.1
-  minZoom: 2
-  maxZoom: 10
 --- !u!224 &1213880211 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6687954950079969086, guid: 40d7973985fee104793c654651f9069c, type: 3}
