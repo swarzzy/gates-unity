@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [ExecuteInEditMode]
 public class Block : MonoBehaviour
@@ -22,6 +23,9 @@ public class Block : MonoBehaviour
 
     private MaterialPropertyBlock propertyBlock;
     private Renderer blockRenderer;
+
+    public UnityEvent OnPowerRise;
+    public UnityEvent OnPowerFall;
 
     protected virtual void OnTick() {}
 
@@ -133,6 +137,19 @@ public class Block : MonoBehaviour
     private void Update()
     {
         OnTick();
+
+        if (powerWasChanged)
+        {
+            if (GetPower())
+            {
+                OnPowerRise?.Invoke();
+            }
+            else
+            {
+                OnPowerFall?.Invoke();
+            }
+        }
+
         powerWasChanged = false;
     }
 

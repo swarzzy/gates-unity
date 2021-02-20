@@ -2,51 +2,68 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO: Idea:
-// To separate public parameters and internal system field we should
-// put all public parameters in MonoBehaviour and keep all "private"
-// parameters in data storage. For example data storage has Color
-// field and in can be set through SetColor method in MonoBehaviour.
+[ExecuteInEditMode]
 public class Wire : MonoBehaviour
 {
-    private const int WireLayerMask = ~(1 << 7);
+    [SerializeField]
+    private Pin begin; // Output
 
-    new public LineRenderer renderer;
-    public Plug begin;
-    public Plug end;
-    public Block beginBlock;
-    public Block endBlock;
-    public bool blocked;
+    [SerializeField]
+    private Pin end; // input
 
-    public void DestroyWire()
+    private LineRenderer lineRenderer;
+
+    public static Wire CreateWire(Pin a, Pin b)
     {
-        WireManager.UnwirePlug(begin, this, false);
-        WireManager.UnwirePlug(end, this, false);
-        Destroy(this.gameObject);
+        Wire result = null;
+
+        if (a.GetPartRef() == b.GetPartRef()) return result;
+
+        if ((a.GetPinType() == PinType.Input && b.GetPinType() == PinType.Output) ||
+            (a.GetPinType() == PinType.Output && b.GetPinType() == PinType.Input))
+        {
+            Pin input = a.GetPinType() == PinType.Input ? a : b;
+            Pin output = a.GetPinType() == PinType.Output ? a : b;
+            Debug.Assert(input != output);
+
+            int inputWireCount = input.GetWires().Count;
+            if (inputWireCount == 0)
+            {
+                GameObject wireObj = GameObject.Instantiate(Desk.WirePrefab);
+                Wire wire = wireObj.GetComponent<Wire>();
+                Debug.Assert(wire != null);
+                wire.begin = output;
+                wire.end = input;
+
+                bool outAdded = output.TryAddWire(wire);
+                bool inpAdded = input.TryAddWire(wire);
+
+                Debug.Assert(outAdded);
+                Debug.Assert(inpAdded);
+
+                result = wire;
+            }
+        }
+
+        return result;
     }
 
-    private void Update()
+    private void Awake()
     {
-        if (Physics.Linecast(begin.transform.position, end.transform.position, out RaycastHit hit, WireLayerMask))
-        {
-            blocked = true;
-            renderer.SetPosition(0, begin.transform.position);
-            renderer.SetPosition(1, hit.point);
-            renderer.startColor = WireManager.WireInvalidColor;
-            renderer.endColor = WireManager.WireInvalidColor;
-        }
-        else
-        {
-            blocked = false;
-            renderer.SetPosition(0, begin.transform.position);
-            renderer.SetPosition(1, end.transform.position);
-            renderer.startColor = WireManager.WireValidColor;
-            renderer.endColor = WireManager.WireValidColor;
-        }
+        lineRenderer = GetComponent<LineRenderer>();
+        Debug.Assert(lineRenderer != null);
 
-        if (end != null && begin != null && !blocked)
-        {
-            end.powered = begin.powered;
-        }
+        lineRenderer.positionCount = 2;
+    }
+
+    private void LateUpdate()
+    {
+        lineRenderer.SetPosition(0, begin.transform.position);
+        lineRenderer.SetPosition(1, end.transform.position);
+        Color color = begin.value ? Color.red : Color.gray;
+        lineRenderer.startColor = color;
+        lineRenderer.endColor = color;
+
+        end.value = begin.value;
     }
 }

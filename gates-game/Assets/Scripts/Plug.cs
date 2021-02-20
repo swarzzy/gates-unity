@@ -8,7 +8,7 @@ public class Plug : MonoBehaviour
 
     public Block block;
     public ConnectionType type;
-    public Wire wire;
+    public _Wire wire;
     public float timeUnwired;
     public bool powered;
 

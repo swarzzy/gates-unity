@@ -3,15 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - BlockMarker
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Pin
   - Water
   - UI
-  - Connectables
+  - Part
   - Plug
   - 
   - 
@@ -40,4 +41,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Part
+    uniqueID: 3743839371
+    locked: 0
+  - name: Wire
+    uniqueID: 349413495
+    locked: 0
+  - name: Pin
+    uniqueID: 3566479461
     locked: 0

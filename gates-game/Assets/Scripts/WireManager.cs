@@ -20,7 +20,7 @@ public class WireManager : PersistantSceneObject<WireManager>
         return result;
     }
 
-    public static bool TryWirePlug(Plug plug, Wire wire)
+    public static bool TryWirePlug(Plug plug, _Wire wire)
     {
         bool result = false;
         if (plug.wire == null)
@@ -49,7 +49,7 @@ public class WireManager : PersistantSceneObject<WireManager>
         return result;
     }
 
-    public static void UnwirePlug(Plug plug, Wire wire, bool doNotdestroyWire = false)
+    public static void UnwirePlug(Plug plug, _Wire wire, bool doNotdestroyWire = false)
     {
         if (wire != null && plug != null)
         {
@@ -76,16 +76,16 @@ public class WireManager : PersistantSceneObject<WireManager>
         }
     }
 
-    public static Wire TryCreateWire(Plug begin, Plug end)
+    public static _Wire TryCreateWire(Plug begin, Plug end)
     {
         var manager = GetInstance();
-        Wire wire = null;
+        _Wire wire = null;
         if (begin.block && end.block && (end.block != begin.block))
         {
             if (CanWirePlugs(begin, end))
             {
                 var obj = Instantiate(manager.wirePrefab);
-                wire = obj.GetComponent<Wire>();
+                wire = obj.GetComponent<_Wire>();
                 Debug.Assert(wire != null);
 
                 wire.renderer.positionCount = 2;
