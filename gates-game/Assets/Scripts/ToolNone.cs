@@ -63,7 +63,7 @@ public class ToolNone : Tool
         for (int i = 0; i < hitCount; i++)
         {
             Collider2D hit = raycastBuffer[i];
-            if (hit.gameObject.layer == (int)DeskLayer.Part)
+            if (hit.gameObject.layer == (int)DeskLayer.PartBody)
             {
                 Part part = hit.gameObject.GetComponentInParent<Part>();
                 Debug.Assert(part != null);

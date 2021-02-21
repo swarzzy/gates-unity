@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 743e449cd0a25464a9e39e9d69884eec, type: 3}
+  m_Name: PartStylesheet
+  m_EditorClassIdentifier: 
+  normalStyle:
+    bodyEnabledColor: {r: 0.019607844, g: 0.54901963, b: 0.05490196, a: 1}
+    bodyDisabledColor: {r: 0.54901963, g: 0.54901963, b: 0.54901963, a: 1}
+    labelColor: {r: 1, g: 1, b: 1, a: 1}
+    inputColor: {r: 0.94509804, g: 0.8392157, b: 0.03137255, a: 1}
+    outputColor: {r: 0.94509804, g: 0.27058825, b: 0.03137255, a: 1}
+  ghostStyle:
+    bodyEnabledColor: {r: 0.019607844, g: 0.54901963, b: 0.05490196, a: 0.7490196}
+    bodyDisabledColor: {r: 0.54901963, g: 0.54901963, b: 0.54901963, a: 0.7490196}
+    labelColor: {r: 1, g: 1, b: 1, a: 0.7490196}
+    inputColor: {r: 0.94509804, g: 0.8392157, b: 0.03137255, a: 0.7490196}
+    outputColor: {r: 0.94509804, g: 0.27058825, b: 0.03137255, a: 0.7490196}
+  invalidStyle:
+    bodyEnabledColor: {r: 0.9056604, g: 0.10679956, b: 0.10679956, a: 0.7490196}
+    bodyDisabledColor: {r: 0.90588236, g: 0.105882354, b: 0.105882354, a: 0.7490196}
+    labelColor: {r: 1, g: 1, b: 1, a: 0.7490196}
+    inputColor: {r: 0.94509804, g: 0.8392157, b: 0.03137255, a: 0.7490196}
+    outputColor: {r: 0.94509804, g: 0.27058825, b: 0.03137255, a: 0.7490196}

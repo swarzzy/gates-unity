@@ -52,6 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   wires: []
+  pinRenderer: {fileID: 4723594555168796778}
   value: 0
 --- !u!212 &4723594555168796778
 SpriteRenderer:

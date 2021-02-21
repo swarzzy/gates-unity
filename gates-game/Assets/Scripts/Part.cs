@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public enum PartType
@@ -15,11 +16,16 @@ public enum PartType
 //[ExecuteInEditMode]
 public class Part : MonoBehaviour
 {
+    private static Collider2D[] tmpOvelapArray = new Collider2D[2];
+
     [SerializeField]
     private PartType type;
 
     [SerializeField]
     private SpriteRenderer bodyRenderer;
+
+    [SerializeField]
+    private TMP_Text label;
 
     [SerializeField]
     protected List<Pin> inputs = new List<Pin>();
@@ -28,6 +34,10 @@ public class Part : MonoBehaviour
     protected List<Pin> outputs = new List<Pin>();
 
     public bool value;
+
+    private Collider2D partCollider;
+
+    private PartStyle style;
 
     public static void DestroyPart(Part part)
     {
@@ -44,19 +54,69 @@ public class Part : MonoBehaviour
         GameObject.Destroy(part.gameObject);
     }
 
+    public void ApplyStyle(PartStyle newStyle)
+    {
+        if (style != newStyle)
+        {
+            var colors = Desk.Stylesheet.GetStyleColors(newStyle);
+
+            inputs.ForEach(it => it.GetRenderer().color = colors.inputColor);
+            outputs.ForEach(it => it.GetRenderer().color = colors.outputColor);
+            label.color = colors.labelColor;
+
+            style = newStyle;
+            UpdateBodyColor();
+        }
+    }
+
+    private void UpdateBodyColor()
+    {
+        var colors = Desk.Stylesheet.GetStyleColors(style);
+
+        Color bodyColor = Color.gray;
+        switch (type)
+        {
+            case PartType.Source: { bodyColor = value ? colors.bodyEnabledColor : colors.bodyDisabledColor; } break;
+            case PartType.Led: { bodyColor = value ? colors.bodyEnabledColor : colors.bodyDisabledColor; } break;
+            case PartType.Not: { bodyColor = colors.bodyEnabledColor; } break;
+            case PartType.And:
+            case PartType.Or:
+            case PartType.Xor: { bodyColor = colors.bodyEnabledColor; } break;
+            default: { Utils.Unreachable(); } break;
+        }
+
+        bodyRenderer.color = bodyColor;
+    }
+
+    public bool CheckOverlap()
+    {
+        bool result = false;
+        Vector2 a = partCollider.bounds.min;
+        Vector2 b = partCollider.bounds.max;
+
+        int hitCount = Physics2D.OverlapAreaNonAlloc(a, b, tmpOvelapArray, (int)DeskLayer.PartMask);
+        for (int i = 0; i < hitCount; i++)
+        {
+            if (tmpOvelapArray[i] == partCollider) continue;
+            result = true;
+        }
+
+        return result;
+    }
+
     public void OnClick()
     {
         switch (type)
         {
             case PartType.Source: {
                 value = !value;
-                SetColor(value);
+                UpdateBodyColor();
             } break;
             case PartType.Led: {} break;
-            case PartType.Not: { } break;
-            case PartType.And: { } break;
-            case PartType.Or: { } break;
-            case PartType.Xor: { } break;
+            case PartType.Not: {} break;
+            case PartType.And: {} break;
+            case PartType.Or: {} break;
+            case PartType.Xor: {} break;
             default: { Utils.Unreachable(); } break;
         }
     }
@@ -65,6 +125,9 @@ public class Part : MonoBehaviour
     {
         inputs.Clear();
         outputs.Clear();
+
+        partCollider = GetComponent<BoxCollider2D>();
+        Debug.Assert(partCollider != null);
 
         var pins = GetComponentsInChildren<Pin>();
 
@@ -80,21 +143,7 @@ public class Part : MonoBehaviour
             }
         }
 
-        switch (type)
-        {
-            case PartType.Source: { SetColor(value); } break;
-            case PartType.Led: { SetColor(value); } break;
-            case PartType.Not: { } break;
-            case PartType.And: { } break;
-            case PartType.Or: { } break;
-            case PartType.Xor: { } break;
-            default: { Utils.Unreachable(); } break;
-        }
-    }
-
-    private void SetColor(bool state)
-    {
-        bodyRenderer.color = state ? Color.red : Color.gray;
+        ApplyStyle(PartStyle.Normal);
     }
 
     private void Update()
@@ -109,7 +158,7 @@ public class Part : MonoBehaviour
                 if (power != value)
                 {
                     value = power;
-                    SetColor(value);
+                    UpdateBodyColor();
                 }
             } break;
 

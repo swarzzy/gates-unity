@@ -602,11 +602,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 085de01257699544cb125d469f114653, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stylesheet: {fileID: 11400000, guid: 4513794c9f446874d9470216cdfdd241, type: 2}
   toolManager: {fileID: 764374394}
   wirePrefab: {fileID: 1352658548034736198, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
   wireToolRenderer: {fileID: 954763244}
   controlManager: {fileID: 764374397}
-  wireTestThickness: 0.2
+  wireTestThickness: 0.3
 --- !u!114 &764374397
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,15 +5,20 @@ using UnityEngine;
 public enum DeskLayer
 {
     Pin = 3,
-    Part = 6,
+    PartBody = 6,
     Wire = 8,
+    Part = 9,
     PinMask = (1 << Pin),
-    PartMask = (1 << Part),
-    WireMask = (1 << Wire)
+    PartBodyMask = (1 << PartBody),
+    WireMask = (1 << Wire),
+    PartMask = (1 << Part)
 }
 
 public class Desk : PersistantSceneObject<Desk>
 {
+    [SerializeField]
+    private PartStylesheet stylesheet;
+
     [SerializeField]
     private ToolManager toolManager;
 
@@ -38,6 +43,8 @@ public class Desk : PersistantSceneObject<Desk>
     public static ControlManager ControlManager { get { return GetInstance().controlManager; } }
 
     public static float WireTestThickness { get { return GetInstance().wireTestThickness; } }
+
+    public static PartStylesheet Stylesheet { get { return GetInstance().stylesheet; } }
 
     protected override void Awake()
     {

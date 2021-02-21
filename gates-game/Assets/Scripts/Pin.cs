@@ -17,9 +17,15 @@ public class Pin : MonoBehaviour
     [SerializeField]
     private List<Wire> wires;
 
+    [SerializeField]
+    private SpriteRenderer pinRenderer;
+
     private Part part;
 
     public bool value;
+
+
+    public SpriteRenderer GetRenderer() { return pinRenderer; }
 
     public void Unwire()
     {

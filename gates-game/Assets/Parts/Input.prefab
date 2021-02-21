@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5196550512528012455}
   - component: {fileID: 3337937556385889798}
   m_Layer: 3
-  m_Name: Input_0
+  m_Name: Input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,6 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   wires: []
+  pinRenderer: {fileID: 5196550512528012455}
   value: 0
 --- !u!212 &5196550512528012455
 SpriteRenderer:

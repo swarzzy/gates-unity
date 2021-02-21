@@ -6,7 +6,9 @@ public class ToolPlacePart : Tool
 {
     private GameObject partPrefab;
 
-    private GameObject part;
+    private Part part;
+
+    private bool overlapping;
 
     public void SetPart(GameObject prefab)
     {
@@ -15,23 +17,51 @@ public class ToolPlacePart : Tool
 
     public override void OnEnable(ToolContext context)
     {
+        overlapping = false;
+
         Debug.Assert(part == null);
-        part = GameObject.Instantiate(partPrefab, (Vector3)context.mousePosWorld, Quaternion.identity);
+        var obj = GameObject.Instantiate(partPrefab, (Vector3)context.mousePosWorld, Quaternion.identity);
+        part = obj.GetComponent<Part>();
+        Debug.Assert(part != null);
+
+        part.ApplyStyle(PartStyle.Ghost);
+
+        OnUpdate(context);
     }
 
     public override void OnPrimaryButtonDown(ToolContext context)
     {
-        part = GameObject.Instantiate(partPrefab, (Vector3)context.mousePosWorld, Quaternion.identity);
+        if (!overlapping)
+        {
+            part.ApplyStyle(PartStyle.Normal);
+
+            var obj = GameObject.Instantiate(partPrefab, (Vector3)context.mousePosWorld, Quaternion.identity);
+            part = obj.GetComponent<Part>();
+            Debug.Assert(part != null);
+
+            overlapping = false;
+            part.ApplyStyle(PartStyle.Ghost);
+        }
     }
 
     public override void OnUpdate(ToolContext context)
     {
         part.transform.position = context.mousePosWorld;
+        if (part.CheckOverlap())
+        {
+            if (!overlapping) part.ApplyStyle(PartStyle.Invalid);
+            overlapping = true;
+        }
+        else
+        {
+            if (overlapping) part.ApplyStyle(PartStyle.Ghost);
+            overlapping = false;
+        }
     }
 
     public override void OnDisable(ToolContext context)
     {
-        GameObject.Destroy(part);
+        GameObject.Destroy(part.gameObject);
         part = null;
     }
 
