@@ -5,9 +5,11 @@ using UnityEngine;
 public enum DeskLayer
 {
     Pin = 3,
-    PinMask = (1 << 3),
     Part = 6,
-    PartMask = (1 << 6)
+    Wire = 8,
+    PinMask = (1 << Pin),
+    PartMask = (1 << Part),
+    WireMask = (1 << Wire)
 }
 
 public class Desk : PersistantSceneObject<Desk>
@@ -24,13 +26,18 @@ public class Desk : PersistantSceneObject<Desk>
     [SerializeField]
     private ControlManager controlManager;
 
-    public static ToolManager ToolManager { get {return GetInstance().toolManager; } }
+    [SerializeField]
+    private float wireTestThickness = 0.2f;
+
+    public static ToolManager ToolManager { get { return GetInstance().toolManager; } }
 
     public static GameObject WirePrefab { get { return GetInstance().wirePrefab; } }
 
     public static GameObject WireToolRenderer { get { return GetInstance().wireToolRenderer; } }
 
     public static ControlManager ControlManager { get { return GetInstance().controlManager; } }
+
+    public static float WireTestThickness { get { return GetInstance().wireTestThickness; } }
 
     protected override void Awake()
     {

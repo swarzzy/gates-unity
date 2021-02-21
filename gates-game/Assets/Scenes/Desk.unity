@@ -606,6 +606,7 @@ MonoBehaviour:
   wirePrefab: {fileID: 1352658548034736198, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
   wireToolRenderer: {fileID: 954763244}
   controlManager: {fileID: 764374397}
+  wireTestThickness: 0.2
 --- !u!114 &764374397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1319,6 +1320,10 @@ PrefabInstance:
       value: Wire
       objectReference: {fileID: 0}
     - target: {fileID: 1352658548034736199, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1352658548034736199, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
       propertyPath: m_Positions.Array.data[0].x
       value: 2.0889
       objectReference: {fileID: 0}
@@ -1364,11 +1369,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1352658548034736201, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 5.05945
       objectReference: {fileID: 0}
     - target: {fileID: 1352658548034736201, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 2.9717
       objectReference: {fileID: 0}
     - target: {fileID: 1352658548034736201, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1400,6 +1405,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1352658548034736201, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6306349432064269176, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
+      propertyPath: m_Size.x
+      value: 5.9410996
+      objectReference: {fileID: 0}
+    - target: {fileID: 6306349432064269176, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
+      propertyPath: m_Size.y
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 6306349432064269176, guid: 2f3634c493b68e140a7c0d07c8fa3fe7, type: 3}
+      propertyPath: m_Offset.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -13,6 +13,21 @@ public class Wire : MonoBehaviour
 
     private LineRenderer lineRenderer;
 
+    new private BoxCollider2D collider;
+
+    private Mesh mesh;
+
+    public static void DestroyWire(Wire wire)
+    {
+        Debug.Assert(wire.begin != null);
+        Debug.Assert(wire.end != null);
+
+        wire.begin.RemoveWire(wire);
+        wire.end.RemoveWire(wire);
+
+        GameObject.Destroy(wire.gameObject);
+    }
+
     public static Wire CreateWire(Pin a, Pin b)
     {
         Wire result = null;
@@ -48,19 +63,68 @@ public class Wire : MonoBehaviour
         return result;
     }
 
+    public bool OverlapPoint(Vector3 point)
+    {
+        bool result = false;
+
+        unsafe {
+
+            Vector2 a = (Vector2)begin.transform.position;
+            Vector2 b = (Vector2)end.transform.position;
+            Vector2 diagonal = b - a;
+            Vector2 perp = Vector2.Perpendicular(diagonal).normalized;
+
+            Vector2* vertices = stackalloc Vector2[4];
+            vertices[0] = a + perp * Desk.WireTestThickness;
+            vertices[1] = b + perp * Desk.WireTestThickness;
+            vertices[2] = b - perp * Desk.WireTestThickness;
+            vertices[3] = a - perp * Desk.WireTestThickness;
+
+            result = MathUtils.PointInPolygon2D(point, vertices, 4);
+        }
+
+        return result;
+    }
+
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
         Debug.Assert(lineRenderer != null);
+
+        collider = GetComponent<BoxCollider2D>();
+        Debug.Assert(collider != null);
 
         lineRenderer.positionCount = 2;
     }
 
     private void LateUpdate()
     {
+        if (!Application.isPlaying && (begin == null || end == null)) return;
+
         lineRenderer.SetPosition(0, begin.transform.position);
         lineRenderer.SetPosition(1, end.transform.position);
+
+        Vector3 diagonal = end.transform.position - begin.transform.position;
+        Vector3 midPoint = begin.transform.position + diagonal * 0.5f;
+
+        transform.position = midPoint;
+
+        collider.size = diagonal;
+        collider.offset = Vector2.zero;
+
         Color color = begin.value ? Color.red : Color.gray;
+
+        if (Application.isPlaying)
+        {
+            var tool = Desk.ToolManager.GetDefaultTool() as ToolNone;
+            Debug.Assert(tool != null);
+
+            if (tool.GetWireUnderCursor() == this)
+            {
+                color = Color.yellow;
+            }
+        }
+
         lineRenderer.startColor = color;
         lineRenderer.endColor = color;
 

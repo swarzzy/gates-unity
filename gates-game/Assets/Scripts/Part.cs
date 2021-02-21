@@ -29,6 +29,21 @@ public class Part : MonoBehaviour
 
     public bool value;
 
+    public static void DestroyPart(Part part)
+    {
+        foreach (Pin input in part.inputs)
+        {
+            input.Unwire();
+        }
+
+        foreach (Pin output in part.outputs)
+        {
+            output.Unwire();
+        }
+
+        GameObject.Destroy(part.gameObject);
+    }
+
     public void OnClick()
     {
         switch (type)

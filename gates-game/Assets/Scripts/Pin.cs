@@ -9,6 +9,8 @@ public enum PinType
 
 public class Pin : MonoBehaviour
 {
+    private static List<Wire> unwireBuffer = new List<Wire>();
+
     [SerializeField]
     private PinType type;
 
@@ -18,6 +20,17 @@ public class Pin : MonoBehaviour
     private Part part;
 
     public bool value;
+
+    public void Unwire()
+    {
+        unwireBuffer.Clear();
+        unwireBuffer.AddRange(wires);
+
+        foreach (Wire wire in unwireBuffer)
+        {
+            Wire.DestroyWire(wire);
+        }
+    }
 
     public void SetPartRef(Part p)
     {
@@ -32,6 +45,11 @@ public class Pin : MonoBehaviour
     public IReadOnlyCollection<Wire> GetWires()
     {
         return wires;
+    }
+
+    public void RemoveWire(Wire wire)
+    {
+        wires.Remove(wire);
     }
 
     public bool TryAddWire(Wire wire)

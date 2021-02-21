@@ -36,6 +36,12 @@ public class ToolManager : MonoBehaviour
         return toolContext;
     }
 
+    public Tool GetDefaultTool()
+    {
+        Tool result = GetTool(defaultToolIndex);
+        return result;
+    }
+
     public Tool GetTool(int index)
     {
         Debug.Assert(index >= 0 && index < tools.Length);
@@ -80,9 +86,12 @@ public class ToolManager : MonoBehaviour
         {
             if (!Desk.ControlManager.IsDragging())
             {
-                if (currentTool.OnDismiss(toolContext))
+                if (currentTool != tools[defaultToolIndex])
                 {
-                    EnableTool(defaultToolIndex);
+                    if (currentTool.OnDismiss(toolContext))
+                    {
+                        EnableTool(defaultToolIndex);
+                    }
                 }
             }
         }
