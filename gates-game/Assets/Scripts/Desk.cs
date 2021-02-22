@@ -14,6 +14,15 @@ public enum DeskLayer
     PartMask = (1 << Part)
 }
 
+public enum DeskTool
+{
+    Default = 0,
+    None = 0,
+    PlacePart = 1,
+    Wire = 2,
+    Selection = 3
+}
+
 public class Desk : PersistantSceneObject<Desk>
 {
     [SerializeField]
@@ -34,6 +43,9 @@ public class Desk : PersistantSceneObject<Desk>
     [SerializeField]
     private float wireTestThickness = 0.2f;
 
+    [SerializeField]
+    private int dragThresholdPx = 5;
+
     public static ToolManager ToolManager { get { return GetInstance().toolManager; } }
 
     public static GameObject WirePrefab { get { return GetInstance().wirePrefab; } }
@@ -45,6 +57,8 @@ public class Desk : PersistantSceneObject<Desk>
     public static float WireTestThickness { get { return GetInstance().wireTestThickness; } }
 
     public static PartStylesheet Stylesheet { get { return GetInstance().stylesheet; } }
+
+    public static int DragThresholdPx { get { return GetInstance().dragThresholdPx; } }
 
     protected override void Awake()
     {

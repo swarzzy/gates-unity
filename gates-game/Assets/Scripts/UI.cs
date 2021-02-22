@@ -26,12 +26,11 @@ public class UI : MonoBehaviour
 
     public void OnPartButtonPressed(GameObject partPrefab)
     {
-        // TODO: Tool constant
-        var placeTool = Desk.ToolManager.GetTool(1) as ToolPlacePart;
+        var placeTool = Desk.ToolManager.GetTool(DeskTool.PlacePart) as ToolPlacePart;
         Debug.Assert(placeTool != null);
 
         placeTool.SetPart(partPrefab);
 
-        Desk.ToolManager.EnableTool(1);
+        Desk.ToolManager.EnableTool(DeskTool.PlacePart);
     }
 }

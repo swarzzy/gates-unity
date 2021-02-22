@@ -86,21 +86,8 @@ public class Wire : MonoBehaviour
         return result;
     }
 
-    private void Awake()
+    public void UpdatePositions()
     {
-        lineRenderer = GetComponent<LineRenderer>();
-        Debug.Assert(lineRenderer != null);
-
-        collider = GetComponent<BoxCollider2D>();
-        Debug.Assert(collider != null);
-
-        lineRenderer.positionCount = 2;
-    }
-
-    private void LateUpdate()
-    {
-        if (!Application.isPlaying && (begin == null || end == null)) return;
-
         lineRenderer.SetPosition(0, begin.transform.position);
         lineRenderer.SetPosition(1, end.transform.position);
 
@@ -111,22 +98,39 @@ public class Wire : MonoBehaviour
 
         collider.size = diagonal;
         collider.offset = Vector2.zero;
+    }
 
-        Color color = begin.value ? Color.red : Color.gray;
+    private void Awake()
+    {
+        lineRenderer = GetComponent<LineRenderer>();
+        Debug.Assert(lineRenderer != null);
 
-        if (Application.isPlaying)
+        collider = GetComponent<BoxCollider2D>();
+        Debug.Assert(collider != null);
+
+        lineRenderer.positionCount = 2;
+
+        StartCoroutine(UpdatePositionsLater());
+    }
+
+    private IEnumerator UpdatePositionsLater()
+    {
+        yield return new WaitForEndOfFrame();
+        UpdatePositions();
+    }
+
+    private void LateUpdate()
+    {
+        if (!Application.isPlaying && (begin == null || end == null)) return;
+
+        if (end.value != begin.value)
         {
-            var tool = Desk.ToolManager.GetDefaultTool() as ToolNone;
-            Debug.Assert(tool != null);
+            var colors = Desk.Stylesheet.GetWireColors();
+            Color color = begin.value ? colors.enabledColor : colors.disabledColor;
 
-            if (tool.GetWireUnderCursor() == this)
-            {
-                color = Color.yellow;
-            }
+            lineRenderer.startColor = color;
+            lineRenderer.endColor = color;
         }
-
-        lineRenderer.startColor = color;
-        lineRenderer.endColor = color;
 
         end.value = begin.value;
     }

@@ -12,6 +12,13 @@ public class PartStyleColors
     public Color outputColor;
 }
 
+[System.Serializable]
+public class WireStyleColors
+{
+    public Color enabledColor;
+    public Color disabledColor;
+}
+
 public enum PartStyle
 {
     Normal,
@@ -26,7 +33,9 @@ public class PartStylesheet : ScriptableObject
     public PartStyleColors ghostStyle;
     public PartStyleColors invalidStyle;
 
-    public PartStyleColors GetStyleColors(PartStyle style)
+    public WireStyleColors wireStyle;
+
+    public PartStyleColors GetPartColors(PartStyle style)
     {
         return style switch {
             PartStyle.Normal => normalStyle,
@@ -34,5 +43,10 @@ public class PartStylesheet : ScriptableObject
             PartStyle.Invalid => invalidStyle,
             _ => invalidStyle
         };
+    }
+
+    public WireStyleColors GetWireColors()
+    {
+        return wireStyle;
     }
 }

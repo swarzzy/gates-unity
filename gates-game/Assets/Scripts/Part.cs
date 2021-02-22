@@ -54,11 +54,32 @@ public class Part : MonoBehaviour
         GameObject.Destroy(part.gameObject);
     }
 
+    public void ChangeLocation(Vector2 newPos)
+    {
+        transform.position = (Vector3)newPos;
+
+        foreach (Pin input in inputs)
+        {
+            foreach (Wire wire in input.GetWires())
+            {
+                wire.UpdatePositions();
+            }
+        }
+
+        foreach (Pin output in outputs)
+        {
+            foreach (Wire wire in output.GetWires())
+            {
+                wire.UpdatePositions();
+            }
+        }
+    }
+
     public void ApplyStyle(PartStyle newStyle)
     {
         if (style != newStyle)
         {
-            var colors = Desk.Stylesheet.GetStyleColors(newStyle);
+            var colors = Desk.Stylesheet.GetPartColors(newStyle);
 
             inputs.ForEach(it => it.GetRenderer().color = colors.inputColor);
             outputs.ForEach(it => it.GetRenderer().color = colors.outputColor);
@@ -71,7 +92,7 @@ public class Part : MonoBehaviour
 
     private void UpdateBodyColor()
     {
-        var colors = Desk.Stylesheet.GetStyleColors(style);
+        var colors = Desk.Stylesheet.GetPartColors(style);
 
         Color bodyColor = Color.gray;
         switch (type)

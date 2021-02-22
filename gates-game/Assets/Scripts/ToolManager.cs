@@ -8,6 +8,8 @@ public class ToolContext
     // Normalized
     public Vector2 mousePosScreen;
     public Vector2 mousePosWorld;
+    public Vector2 mouseScreenDelta;
+    public Vector2 mouseWorldDelta;
     public Camera camera;
     public ToolManager manager;
 }
@@ -21,7 +23,7 @@ public class ToolManager : MonoBehaviour
     private string[] toolsList;
 
     [SerializeField]
-    private int defaultToolIndex;
+    private DeskTool defaultTool;
 
     private Tool[] tools;
 
@@ -31,6 +33,8 @@ public class ToolManager : MonoBehaviour
 
     private Tool toolToSwitch;
 
+    private Vector2 lastMouseScreenPos;
+
     public ToolContext GetToolContext()
     {
         return toolContext;
@@ -38,18 +42,18 @@ public class ToolManager : MonoBehaviour
 
     public Tool GetDefaultTool()
     {
-        Tool result = GetTool(defaultToolIndex);
+        Tool result = GetTool(defaultTool);
         return result;
     }
 
-    public Tool GetTool(int index)
+    public Tool GetTool(DeskTool index)
     {
-        Debug.Assert(index >= 0 && index < tools.Length);
-        Tool result = tools[index];
+        Debug.Assert((int)index >= 0 && (int)index < tools.Length);
+        Tool result = tools[(int)index];
         return result;
     }
 
-    public void EnableTool(int index)
+    public void EnableTool(DeskTool index)
     {
         Tool tool = GetTool(index);
         toolToSwitch = tool;
@@ -72,7 +76,7 @@ public class ToolManager : MonoBehaviour
 
         Debug.Assert(tools != null);
 
-        EnableTool(defaultToolIndex);
+        EnableTool(defaultTool);
     }
 
     private void Update()
@@ -82,15 +86,25 @@ public class ToolManager : MonoBehaviour
         toolContext.mousePosScreen = mousePosClamped / new Vector2(Screen.width, Screen.height);
         toolContext.mousePosWorld = toolContext.camera.ScreenToWorldPoint(new Vector3(mousePosClamped.x, mousePosClamped.y, toolContext.camera.nearClipPlane));
 
+        Vector2 mouseScreenDelta = toolContext.mousePosScreen - lastMouseScreenPos;
+
+        Vector2 camViewportDim = new Vector2(camera.orthographicSize * camera.aspect * 2.0f, camera.orthographicSize * 2.0f);
+        Vector2 mouseWorldDelta = camViewportDim * mouseScreenDelta;
+
+        toolContext.mouseScreenDelta = mouseScreenDelta;
+        toolContext.mouseWorldDelta = mouseWorldDelta;
+
+        lastMouseScreenPos = toolContext.mousePosScreen;
+
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyUp(KeyCode.Mouse1))
         {
             if (!Desk.ControlManager.IsDragging())
             {
-                if (currentTool != tools[defaultToolIndex])
+                if (currentTool != tools[(int)defaultTool])
                 {
                     if (currentTool.OnDismiss(toolContext))
                     {
-                        EnableTool(defaultToolIndex);
+                        EnableTool(defaultTool);
                     }
                 }
             }

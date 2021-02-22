@@ -574,7 +574,8 @@ MonoBehaviour:
   - ToolNone
   - ToolPlacePart
   - ToolWire
-  defaultToolIndex: 0
+  - ToolSelection
+  defaultTool: 0
 --- !u!4 &764374395
 Transform:
   m_ObjectHideFlags: 0
@@ -608,6 +609,7 @@ MonoBehaviour:
   wireToolRenderer: {fileID: 954763244}
   controlManager: {fileID: 764374397}
   wireTestThickness: 0.3
+  dragThresholdPx: 5
 --- !u!114 &764374397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -622,7 +624,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 1207124399}
   dragKey: 324
-  dragThresholdPx: 5
   zoomSensitivity: 0.1
   minZoom: 2
   maxZoom: 10

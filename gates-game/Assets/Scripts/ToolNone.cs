@@ -43,13 +43,13 @@ public class ToolNone : Tool
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
-                    var wireTool = context.manager.GetTool(2) as ToolWire;
+                    var wireTool = context.manager.GetTool(DeskTool.Wire) as ToolWire;
                     Debug.Assert(wireTool != null);
 
                     bool canStartWire = wireTool.SetInitialPin(pin);
                     if (canStartWire)
                     {
-                        context.manager.EnableTool(2);
+                        context.manager.EnableTool(DeskTool.Wire);
                     }
                 }
 
@@ -72,7 +72,12 @@ public class ToolNone : Tool
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
-                    part.OnClick();
+                    var selectionTool = context.manager.GetTool(DeskTool.Selection) as ToolSelection;
+                    Debug.Assert(selectionTool != null);
+
+                    selectionTool.SetSelection(part);
+
+                    context.manager.EnableTool(DeskTool.Selection);
                 }
                 else if (Input.GetKeyUp(KeyCode.Mouse1))
                 {

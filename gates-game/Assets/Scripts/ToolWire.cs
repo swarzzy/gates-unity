@@ -31,7 +31,7 @@ public class ToolWire : Tool
             Wire wire = Wire.CreateWire(pin, initialPin);
             if (wire)
             {
-                context.manager.EnableTool(0);
+                context.manager.EnableTool(DeskTool.Default);
             }
         }
     }

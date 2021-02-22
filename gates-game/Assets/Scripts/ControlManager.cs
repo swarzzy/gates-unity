@@ -11,9 +11,6 @@ public class ControlManager : MonoBehaviour
     private KeyCode dragKey = KeyCode.Mouse1;
 
     [SerializeField]
-    private float dragThresholdPx = 0.1f;
-
-    [SerializeField]
     private float zoomSensitivity = 0.1f;
 
     [SerializeField]
@@ -21,8 +18,6 @@ public class ControlManager : MonoBehaviour
 
     [SerializeField]
     private float maxZoom = 10.0f;
-
-    private float dragThresholdNormalizedSqrMag;
 
     private bool isDragging;
     private Vector2 dragOffset = Vector2.zero;
@@ -47,13 +42,6 @@ public class ControlManager : MonoBehaviour
 
         float zoomValue = Mathf.Lerp(minZoom, maxZoom, targetZoom);
         camera.orthographicSize = zoomValue;
-
-        dragThresholdNormalizedSqrMag = Vector2.SqrMagnitude(new Vector2(dragThresholdPx, dragThresholdPx) / new Vector2(Screen.width, Screen.height));
-    }
-
-    private void OnValidate()
-    {
-        dragThresholdNormalizedSqrMag = Vector2.SqrMagnitude(new Vector2(dragThresholdPx, dragThresholdPx) / new Vector2(Screen.width, Screen.height));
     }
 
     private void Update()
@@ -69,6 +57,9 @@ public class ControlManager : MonoBehaviour
 
         if (Input.GetKey(dragKey))
         {
+            float threshold = Desk.DragThresholdPx;
+            var dragThresholdNormalizedSqrMag = Vector2.SqrMagnitude(new Vector2(threshold, threshold) / new Vector2(Screen.width, Screen.height));
+
             dragOffset += mouseScreenDelta;
 
             if (dragOffset.sqrMagnitude > dragThresholdNormalizedSqrMag)
